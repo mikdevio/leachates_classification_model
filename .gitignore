@@ -53,3 +53,6 @@ docs/_build/
 graphs/
 binary/
 results/
+
+# virtualenv
+.venv/
