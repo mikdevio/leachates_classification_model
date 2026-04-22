@@ -1,0 +1,11 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Jupyter Debugger",
+            "type": "debugpy",
+            "request": "attach",
+            "justMyCode": true
+        }
+    ]
+}

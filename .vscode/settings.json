@@ -1,0 +1,22 @@
+{
+    // Kernel configuration jupyter notebooks
+    // Cierra el kernel automáticamente cuando cierras el archivo .ipynb
+    "jupyter.enableKernelServiceLogger": false,
+    "jupyter.kernels.trusted": true,
+    
+    // IMPORTANTE: Evita que los kernels se queden abiertos en segundo plano
+    "jupyter.standardOutputLimit": 5000,
+    "jupyter.lowBatterySaveMode": true,
+    
+    // Fuerza a que cada notebook use su propio proceso independiente
+    "jupyter.notebookFileRoot": "${fileDirname}",
+    
+    // Configuración para que el debugger no bloquee la ejecución normal
+    "debug.allowBreakpointsEverywhere": false,
+    "jupyter.debugJustMyCode": true,
+    "jupyter.logging.level": "error",
+
+    // Debugging configuration
+    "python.debugpy.subProcess": true,
+    "jupyter.runStartupCommands": "%config IPCompleter.use_jedi = False"
+}
