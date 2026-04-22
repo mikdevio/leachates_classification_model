@@ -48,7 +48,7 @@ def elbow_method(x_data):
     plt.show()
 
 
-def run_silhouette_score(data: pd.DataFrame, n_clusters: int, n_rows: int = 3, n_cols: int = 3) -> Tuple[np.ndarray[Any, dtype[float64]], int]:
+def run_silhouette_score(data: pd.DataFrame, n_clusters: int, n_rows: int = 3, n_cols: int = 3) -> Tuple[np.ndarray[Any, np.dtype[np.float64]], int]:
 
     silhouette_data: np.ndarray[Any, np.dtype[np.float64]] = np.zeros([n_clusters, 2])
 
