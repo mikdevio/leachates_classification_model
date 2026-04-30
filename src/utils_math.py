@@ -5,7 +5,7 @@ from typing import Any, Tuple
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from matplotlib import cm
+from matplotlib import colormaps
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_samples, silhouette_score
@@ -33,9 +33,11 @@ def elbow_method(x_data):
     elbow_index = wcss_df['d_slope'].idxmax()
     elbow_point = wcss_df.loc[elbow_index]
 
-    print(wcss_df)
+    # print(wcss_df)
+    x_elbow_point = elbow_point['n_cluster']
+    y_elbow_point = elbow_point['wcss']
 
-    sns.scatterplot(x=[elbow_point['n_cluster']], y=[elbow_point['wcss']], color='red', s=80, zorder=5)
+    plt.scatter(x=x_elbow_point, y=y_elbow_point, color='red', s=80, zorder=5)
 
     for x, y in zip(wcss_df["n_cluster"], wcss_df["wcss"]):
         plt.annotate(f'{x, int(y)}', (x, y), textcoords="offset points", xytext=(15,10), ha='center', fontsize=9)
@@ -70,7 +72,7 @@ def run_silhouette_score(data: pd.DataFrame, n_clusters: int, n_rows: int = 3, n
         print(f"Para n_clusters = {n_clusters_opt}, el promedio es: {silhouette_avg:.3f}")
 
         # Calcular el coeficiente de cada muestra
-        sample_silhouette_values = silhouette_samples(data, cluster_labels)
+        sample_silhouette_values = np.asarray(silhouette_samples(data, cluster_labels))
 
         y_lower = 10
         for i in range(n_clusters_opt):
@@ -80,7 +82,7 @@ def run_silhouette_score(data: pd.DataFrame, n_clusters: int, n_rows: int = 3, n
             size_cluster_i = ith_cluster_silhouette_values.shape[0]
             y_upper = y_lower + size_cluster_i
 
-            color = cm.nipy_spectral(float(i) / n_clusters_opt)
+            color = colormaps['nipy_spectral'](float(i) / n_clusters_opt)
             ax_1[i_row, i_col].fill_betweenx(np.arange(y_lower, y_upper), 0, ith_cluster_silhouette_values,
                             facecolor=color, edgecolor=color, alpha=0.7)
 
@@ -191,3 +193,31 @@ def graph_dist_clusters(data, column_names, pca_n_cols, pca_n_rows, column_analy
             print(f"This directory {directory_path} is not empty. Choose another one.")
     except ValueError as e:
         print(e)
+
+def acceptable_nullvalues(data:pd.DataFrame, range_umbral:np.ndarray, show=False) -> None:
+
+    columns_per_perc = np.zeros([len(range_umbral), 2])
+    
+    i = 0 
+    for umbral in range_umbral:
+        # 2. Eliminar columnas con más del 50% de nulos
+        umbral_len = len(data) * umbral
+        data_fixed_test = data.copy().dropna(thresh=umbral_len, axis=1)
+        columns_per_perc[i, 0] = umbral
+        columns_per_perc[i, 1] = len(data_fixed_test.columns)
+        i += 1
+
+    if(show):
+
+        # print(columns_per_perc)
+        plt.figure(figsize=(8,4))
+        plt.plot(columns_per_perc[:, 0], columns_per_perc[:, 1], '--.')
+        plt.plot()
+        plt.minorticks_on()
+        plt.grid(which='major', linestyle='--', linewidth='0.5', color='gray')
+        plt.title("Columnas por porcentaje")
+        plt.xlabel("Porcentaje no nulos")
+        plt.ylabel("Columnas numéricas seleccionadas")
+        plt.tight_layout()  # Prevents overlapv
+        plt.show()
+    
