@@ -57,5 +57,6 @@ results/
 
 # virtualenv
 .venv/
-data/
+data/processed/
+data/results/
 models/
